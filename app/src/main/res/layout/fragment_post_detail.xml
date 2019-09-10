@@ -2,37 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginStart="@dimen/recycler_margin"
+    android:layout_height="match_parent"
     android:layout_marginEnd="@dimen/recycler_margin"
-    android:orientation="vertical"
-    android:id="@+id/post_list_item_parent"
-    android:clickable="true"
-    android:focusable="true"
+    android:layout_marginStart="@dimen/recycler_margin"
     android:background="@color/white"
+    android:orientation="vertical"
     >
 
     <TextView
-        android:id="@+id/post_list_item_title"
+        android:id="@+id/post_detail_item_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAllCaps="true"
-        tools:text="title"
+        tools:text="author"
         />
 
     <TextView
-        android:id="@+id/post_list_item_body"
+        android:id="@+id/post_detail_item_number_of_comments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="4"
         android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="4"
+        tools:text="999"
+        />
+
+    <TextView
+        android:id="@+id/post_detail_item_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="4"
         tools:text="@tools:sample/lorem/random"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/black"/>
 
 </LinearLayout>

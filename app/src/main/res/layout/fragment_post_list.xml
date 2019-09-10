@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/post_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:scrollbars="vertical"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
