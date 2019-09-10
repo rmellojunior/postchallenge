@@ -11,4 +11,14 @@ interface PostApi {
     @Url url: String
   ): Single<List<PostItem>>
 
+  @GET
+  fun getUsers(
+    @Url url: String
+  ): Single<List<User>>
+
+  @GET
+  fun getComments(
+    @Url url: String
+  ): Single<List<Comment>>
+
 }

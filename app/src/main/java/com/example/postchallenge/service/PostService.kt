@@ -29,4 +29,20 @@ class PostService {
       .subscribeOn(ioScheduler)
   }
 
+  fun getUsers(): Single<List<User>> {
+
+    return postApi.getUsers(
+      url = ENDPOINT_USERS_LIST
+    )
+      .subscribeOn(ioScheduler)
+  }
+
+  fun getComments(): Single<List<Comment>> {
+
+    return postApi.getComments(
+      url = ENDPOINT_COMMENTS_LIST
+    )
+      .subscribeOn(ioScheduler)
+  }
+
 }
