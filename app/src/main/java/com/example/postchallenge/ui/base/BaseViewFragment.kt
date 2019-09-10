@@ -6,6 +6,11 @@ abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), Ba
 
   abstract fun getPresenter(): T
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    getPresenter().setInitialState(savedInstanceState ?: arguments)
+  }
+
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
     super.onViewStateRestored(savedInstanceState)
     getPresenter().start(savedInstanceState)
@@ -23,7 +28,7 @@ abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), Ba
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    val state: Bundle? = getPresenter().saveState()
+    val state: Bundle? = getPresenter().getCurrentState()
     if (state != null) {
       outState.putAll(state)
     }
@@ -33,4 +38,5 @@ abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), Ba
     getPresenter().stop()
     super.onDestroyView()
   }
+
 }

@@ -6,8 +6,14 @@ import io.reactivex.disposables.Disposable
 
 abstract class BasePresenter : BaseContract.Presenter {
 
-  private lateinit var onResumeSubscriptions: CompositeDisposable
-  private lateinit var onStartSubscriptions: CompositeDisposable
+  private var onResumeSubscriptions: CompositeDisposable? = null
+  private var onStartSubscriptions: CompositeDisposable? = null
+
+  override fun setInitialState(state: Bundle?) {
+    // does nothing
+  }
+
+  override fun getCurrentState(): Bundle = Bundle()
 
   override fun start(state: Bundle?) {
     onStartSubscriptions = CompositeDisposable()
@@ -18,22 +24,25 @@ abstract class BasePresenter : BaseContract.Presenter {
   }
 
   override fun pause() {
-    if (!onResumeSubscriptions.isDisposed) {
-      onResumeSubscriptions.dispose()
+    if (onResumeSubscriptions != null && !onResumeSubscriptions?.isDisposed!!) {
+      onResumeSubscriptions!!.dispose()
+      onResumeSubscriptions = null
     }
   }
 
   override fun stop() {
-    if (!onStartSubscriptions.isDisposed) {
-      onStartSubscriptions.dispose()
+    if (onStartSubscriptions != null && !onStartSubscriptions?.isDisposed!!) {
+      onStartSubscriptions!!.dispose()
+      onStartSubscriptions = null
     }
   }
 
   protected fun addOnResumeSubscription(subscription: Disposable) {
-    onResumeSubscriptions.add(subscription)
+    onResumeSubscriptions?.add(subscription)
   }
 
   protected fun addOnStartSubscription(subscription: Disposable) {
-    onStartSubscriptions.add(subscription)
+    onStartSubscriptions?.add(subscription)
   }
+
 }

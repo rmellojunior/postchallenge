@@ -10,7 +10,8 @@ interface BaseContract {
     fun pause()
     fun stop()
 
-    fun saveState(): Bundle?
+    fun getCurrentState(): Bundle
+    fun setInitialState(state: Bundle?)
   }
 
   interface View

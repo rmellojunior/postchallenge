@@ -5,6 +5,7 @@ import com.example.postchallenge.service.PostService
 import com.example.postchallenge.ui.base.BaseActivity
 import com.example.postchallenge.ui.base.BaseFragment
 import com.example.postchallenge.ui.postlist.PostListPresenter
+import com.example.postchallenge.ui.postlist.detail.PostDetailPresenter
 import dagger.Component
 
 @ApplicationScope
@@ -16,12 +17,17 @@ interface MainInjectorComponent {
 
   fun inject(application: PostApplication)
 
+  // base
   fun inject(activity: BaseActivity)
 
   fun inject(fragment: BaseFragment)
 
+  // services
+  fun inject(service: PostService)
+
+  // presenters
   fun inject(presenter: PostListPresenter)
 
-  fun inject(service: PostService)
+  fun inject(presenter: PostDetailPresenter)
 
 }
