@@ -26,6 +26,10 @@ class PostDetailPresenter constructor(
   @field:Named(SchedulerModule.VIEW_SCHEDULER)
   lateinit var viewScheduler: Scheduler
 
+  @Inject
+  @field:Named(SchedulerModule.IO_SCHEDULER)
+  lateinit var ioScheduler: Scheduler
+
   private lateinit var post: Post
 
   override fun setInitialState(state: Bundle?) {
@@ -44,6 +48,10 @@ class PostDetailPresenter constructor(
   override fun handleGetPostDetail() {
     addOnResumeSubscription(
       view.isInternetOn()
+        .doOnNext {
+          view.hideParent()
+          view.showProgressBar()
+        }
         .flatMapSingle { hasInternet ->
           if (!hasInternet) {
             Single.zip(
@@ -53,6 +61,7 @@ class PostDetailPresenter constructor(
                 Pair(user.name, numberOfComments)
               }
             )
+              .subscribeOn(ioScheduler)
           } else {
             Single.zip(
               getUsers(),
@@ -64,11 +73,14 @@ class PostDetailPresenter constructor(
                   comments.filter { it.postId == post.id }.size)
               }
             )
+              .subscribeOn(ioScheduler)
           }
         }
         .observeOn(viewScheduler)
         .subscribeBy(
           onNext = { (name, numberOfComments) ->
+            view.hideProgressBar()
+            view.showParent()
             view.setName(name)
             view.setNumberOfComments(numberOfComments)
             view.setDescription(post.body)

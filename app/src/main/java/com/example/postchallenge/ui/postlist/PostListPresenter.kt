@@ -36,13 +36,17 @@ class PostListPresenter constructor(
   override fun handleGetPostList() {
     addOnStartSubscription(
       view.isInternetOn()
+        .doOnNext {
+          view.hideParent()
+          view.showProgressBar()
+        }
         .flatMapSingle { hasInternet ->
           if (!hasInternet) {
-            Completable.fromCallable { /*view.prepareLoadingScreen()*/ }
+            Completable.fromCallable {}
               .andThen(repository.getAllPosts())
               .subscribeOn(ioScheduler)
           } else {
-            Completable.fromCallable { /*view.prepareLoadingScreen()*/ }
+            Completable.fromCallable {}
               .andThen(getPostList())
                 .doOnSuccess { posts -> posts.forEach { repository.insertOrUpdatePost(it) } }
                 .subscribeOn(ioScheduler)
@@ -51,6 +55,8 @@ class PostListPresenter constructor(
         .observeOn(viewScheduler)
         .subscribeBy(
           onNext = { response ->
+            view.hideProgressBar()
+            view.showParent()
             if (response.isEmpty()) {
               view.setEmptyState()
             } else {

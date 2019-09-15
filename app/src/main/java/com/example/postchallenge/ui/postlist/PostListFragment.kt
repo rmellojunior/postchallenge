@@ -15,6 +15,7 @@ import com.example.postchallenge.ui.base.BaseViewFragment
 import com.example.postchallenge.ui.postlist.adapter.PostListAdapter
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.fragment_post_list.indeterminateBar
 import kotlinx.android.synthetic.main.fragment_post_list.post_recycler_view
 
 class PostListFragment : BaseViewFragment<PostListPresenter>(), PostListContract.View {
@@ -59,6 +60,22 @@ class PostListFragment : BaseViewFragment<PostListPresenter>(), PostListContract
     val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
     post_recycler_view.layoutManager = layoutManager
     post_recycler_view.adapter = adapter
+  }
+
+  override fun showParent() {
+    post_recycler_view.visibility = View.VISIBLE
+  }
+
+  override fun hideParent() {
+    post_recycler_view.visibility = View.GONE
+  }
+
+  override fun hideProgressBar() {
+    indeterminateBar.visibility = View.INVISIBLE
+  }
+
+  override fun showProgressBar() {
+    indeterminateBar.visibility = View.VISIBLE
   }
 
   override fun setPostList(postList: List<Post>) {

@@ -7,6 +7,10 @@ import io.reactivex.Observable
 interface PostListContract {
 
   interface View : BaseContract.View {
+    fun hideProgressBar()
+    fun showProgressBar()
+    fun showParent()
+    fun hideParent()
     fun setPostList(postList: List<Post>)
     fun setEmptyState()
     fun postItemSelected(): Observable<Post>

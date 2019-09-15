@@ -1,15 +1,18 @@
 package com.example.postchallenge.ui.postlist.detail
 
 import android.os.Bundle
+import android.view.View
 import com.example.postchallenge.PostApplication
 import com.example.postchallenge.R
 import com.example.postchallenge.data.PostRepository
 import com.example.postchallenge.data.model.Post
 import com.example.postchallenge.service.PostService
 import com.example.postchallenge.ui.base.BaseViewFragment
+import kotlinx.android.synthetic.main.fragment_post_detail.indeterminateBar
 import kotlinx.android.synthetic.main.fragment_post_detail.post_detail_item_author
 import kotlinx.android.synthetic.main.fragment_post_detail.post_detail_item_description
 import kotlinx.android.synthetic.main.fragment_post_detail.post_detail_item_number_of_comments
+import kotlinx.android.synthetic.main.fragment_post_detail.post_detail_parent
 
 class PostDetailFragment : BaseViewFragment<PostDetailPresenter>(), PostDetailContract.View {
 
@@ -32,6 +35,22 @@ class PostDetailFragment : BaseViewFragment<PostDetailPresenter>(), PostDetailCo
     )
     app.netComponent.inject(presenter)
     return presenter
+  }
+
+  override fun showParent() {
+    post_detail_parent.visibility = View.VISIBLE
+  }
+
+  override fun hideParent() {
+    post_detail_parent.visibility = View.GONE
+  }
+
+  override fun hideProgressBar() {
+    indeterminateBar.visibility = View.INVISIBLE
+  }
+
+  override fun showProgressBar() {
+    indeterminateBar.visibility = View.VISIBLE
   }
 
   override fun setName(name: String) {

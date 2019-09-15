@@ -5,6 +5,11 @@ import com.example.postchallenge.ui.base.BaseContract
 class PostDetailContract {
 
   interface View : BaseContract.View {
+    fun hideProgressBar()
+    fun showProgressBar()
+    fun showParent()
+    fun hideParent()
+
     fun setName(name: String)
     fun setNumberOfComments(number: Int)
     fun setDescription(description: String)
