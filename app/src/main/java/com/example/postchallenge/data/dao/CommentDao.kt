@@ -15,6 +15,6 @@ interface CommentDao {
   fun getAllCommentsInPost(id: Int): Single<Int>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertComment(comment: Comment): Completable
+  fun insertComment(comment: Comment)
 
 }

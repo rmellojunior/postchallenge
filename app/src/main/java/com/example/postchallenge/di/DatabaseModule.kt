@@ -1,6 +1,5 @@
 package com.example.postchallenge.di
 
-import android.app.Application
 import androidx.room.Room
 import com.example.postchallenge.PostApplication
 import com.example.postchallenge.data.PostDatabase

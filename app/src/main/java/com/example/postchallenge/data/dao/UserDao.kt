@@ -15,5 +15,5 @@ interface UserDao {
   fun getUser(id: Int): Single<User>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertUser(user: User): Completable
+  fun insertUser(user: User)
 }

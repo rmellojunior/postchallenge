@@ -51,6 +51,6 @@ class NetworkModule {
   ): PostApi = retrofit.create(PostApi::class.java)
 
   companion object {
-    private const val DEFAULT_BASE_URL = "http://jsonplaceholder.typicode.com/"
+    private const val DEFAULT_BASE_URL = "https://jsonplaceholder.typicode.com/"
   }
 }

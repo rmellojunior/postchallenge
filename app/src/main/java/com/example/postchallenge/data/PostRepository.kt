@@ -21,28 +21,16 @@ class PostRepository : IPostRepository {
   @Inject
   lateinit var commentDao: CommentDao
 
-  override fun getAllPosts(): Single<List<Post>> {
-    return postDao.getAllPosts()
-  }
+  override fun getAllPosts(): Single<List<Post>> = postDao.getAllPosts()
 
-  override fun getUser(id: Int): Single<User> {
-    return userDao.getUser(id)
-  }
+  override fun getUser(id: Int): Single<User> = userDao.getUser(id)
 
-  override fun getAllCommentsInPost(id: Int): Single<Int> {
-    return commentDao.getAllCommentsInPost(id)
-  }
+  override fun getAllCommentsInPost(id: Int): Single<Int> = commentDao.getAllCommentsInPost(id)
 
-  override fun insertOrUpdatePost(post: Post): Completable {
-    return postDao.insertPost(post)
-  }
+  override fun insertOrUpdatePost(post: Post) = postDao.insertPost(post)
 
-  override fun insertOrUpdateUser(user: User): Completable {
-    return userDao.insertUser(user)
-  }
+  override fun insertOrUpdateUser(user: User) = userDao.insertUser(user)
 
-  override fun insertOrUpdateComment(comment: Comment): Completable {
-    return commentDao.insertComment(comment)
-  }
+  override fun insertOrUpdateComment(comment: Comment) = commentDao.insertComment(comment)
 
 }

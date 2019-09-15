@@ -24,6 +24,10 @@ class PostListPresenter constructor(
   @field:Named(SchedulerModule.VIEW_SCHEDULER)
   lateinit var viewScheduler: Scheduler
 
+  @Inject
+  @field:Named(SchedulerModule.IO_SCHEDULER)
+  lateinit var ioScheduler: Scheduler
+
   override fun start() {
     super.start()
     handleGetPostList()
@@ -36,18 +40,20 @@ class PostListPresenter constructor(
           if (!hasInternet) {
             Completable.fromCallable { /*view.prepareLoadingScreen()*/ }
               .andThen(repository.getAllPosts())
+              .subscribeOn(ioScheduler)
           } else {
             Completable.fromCallable { /*view.prepareLoadingScreen()*/ }
               .andThen(getPostList())
+                .doOnSuccess { posts -> posts.forEach { repository.insertOrUpdatePost(it) } }
+                .subscribeOn(ioScheduler)
           }
         }
         .observeOn(viewScheduler)
         .subscribeBy(
-          onNext = { response: List<Post> ->
+          onNext = { response ->
             if (response.isEmpty()) {
               view.setEmptyState()
             } else {
-              response.forEach { repository.insertOrUpdatePost(it) }
               view.setPostList(response)
             }
           },

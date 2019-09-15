@@ -8,11 +8,11 @@ import io.reactivex.Single
 
 interface IPostRepository {
   fun getAllPosts(): Single<List<Post>>
-  fun insertOrUpdatePost(post: Post): Completable
+  fun insertOrUpdatePost(post: Post)
 
   fun getUser(id: Int): Single<User>
-  fun insertOrUpdateUser(user: User): Completable
+  fun insertOrUpdateUser(user: User)
 
   fun getAllCommentsInPost(id: Int): Single<Int>
-  fun insertOrUpdateComment(comment: Comment): Completable
+  fun insertOrUpdateComment(comment: Comment)
 }
