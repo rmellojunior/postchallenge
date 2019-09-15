@@ -1,8 +1,10 @@
 package com.example.postchallenge.ui.postlist.detail
 
+import com.example.postchallenge.ui.base.BaseContract
+
 class PostDetailContract {
 
-  interface View {
+  interface View : BaseContract.View {
     fun setName(name: String)
     fun setNumberOfComments(number: Int)
     fun setDescription(description: String)

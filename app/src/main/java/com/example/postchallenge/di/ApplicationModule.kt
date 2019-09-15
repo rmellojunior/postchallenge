@@ -5,13 +5,15 @@ import com.example.postchallenge.PostApplication
 import dagger.Module
 import dagger.Provides
 
-@Module
+@Module(includes = [
+  (DatabaseModule::class)
+])
 class ApplicationModule(
   private val postApplication: PostApplication) {
 
   @ApplicationScope
   @Provides
-  fun provideMezuApplication(): PostApplication {
+  fun providePostApplication(): PostApplication {
     return postApplication
   }
 

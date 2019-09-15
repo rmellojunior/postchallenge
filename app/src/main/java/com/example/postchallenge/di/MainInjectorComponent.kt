@@ -1,6 +1,7 @@
 package com.example.postchallenge.di
 
 import com.example.postchallenge.PostApplication
+import com.example.postchallenge.data.PostRepository
 import com.example.postchallenge.service.PostService
 import com.example.postchallenge.ui.base.BaseActivity
 import com.example.postchallenge.ui.base.BaseFragment
@@ -11,8 +12,8 @@ import dagger.Component
 @ApplicationScope
 @Component(modules = [
   (MainInjectorModule::class), (ApplicationModule::class),
-  (NetworkModule::class), (SchedulerModule::class), (SerializationModule::class)
-])
+  (NetworkModule::class), (SchedulerModule::class),
+  (SerializationModule::class), (DatabaseModule::class)])
 interface MainInjectorComponent {
 
   fun inject(application: PostApplication)
@@ -29,5 +30,8 @@ interface MainInjectorComponent {
   fun inject(presenter: PostListPresenter)
 
   fun inject(presenter: PostDetailPresenter)
+
+  //repositories
+  fun inject(repository: PostRepository)
 
 }

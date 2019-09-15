@@ -2,11 +2,12 @@ package com.example.postchallenge.ui.postlist.detail
 
 import android.os.Bundle
 import android.util.Log
+import com.example.postchallenge.data.PostRepository
+import com.example.postchallenge.data.model.Comment
+import com.example.postchallenge.data.model.Post
+import com.example.postchallenge.data.model.User
 import com.example.postchallenge.di.SchedulerModule
-import com.example.postchallenge.service.Comment
-import com.example.postchallenge.service.PostItem
 import com.example.postchallenge.service.PostService
-import com.example.postchallenge.service.User
 import com.example.postchallenge.ui.base.BasePresenter
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -17,20 +18,21 @@ import javax.inject.Named
 
 class PostDetailPresenter constructor(
   private val view: PostDetailContract.View,
-  private val postService: PostService
+  private val postService: PostService,
+  private val repository: PostRepository
 ) : BasePresenter(), PostDetailContract.Presenter {
 
   @Inject
   @field:Named(SchedulerModule.VIEW_SCHEDULER)
   lateinit var viewScheduler: Scheduler
 
-  private lateinit var postItem: PostItem
+  private lateinit var post: Post
 
   override fun setInitialState(state: Bundle?) {
     super.setInitialState(state)
     state?.let {
-      if(state.containsKey(PostDetailContract.EXTRA_POST_ITEM))
-        postItem = state.getParcelable(PostDetailContract.EXTRA_POST_ITEM)!!
+      if (state.containsKey(PostDetailContract.EXTRA_POST_ITEM))
+        post = state.getParcelable(PostDetailContract.EXTRA_POST_ITEM)!!
     }
   }
 
@@ -41,19 +43,35 @@ class PostDetailPresenter constructor(
 
   override fun handleGetPostDetail() {
     addOnResumeSubscription(
-      Single.zip(
-        getUsers(),
-        getComments(),
-        BiFunction<List<User>, List<Comment>, Pair<String, Int>> { users, comments ->
-          Pair(users.find { it.id == postItem.userId }!!.name, comments.filter { it.postId == postItem.id }.size)
+      view.isInternetOn()
+        .flatMapSingle { hasInternet ->
+          if (!hasInternet) {
+            Single.zip(
+              repository.getUser(post.userId),
+              repository.getAllCommentsInPost(post.id),
+              BiFunction<User, Int, Pair<String, Int>> { user, numberOfComments ->
+                Pair(user.name, numberOfComments)
+              }
+            )
+          } else {
+            Single.zip(
+              getUsers(),
+              getComments(),
+              BiFunction<List<User>, List<Comment>, Pair<String, Int>> { users, comments ->
+                users.forEach { repository.insertOrUpdateUser(it) }
+                comments.forEach { repository.insertOrUpdateComment(it) }
+                Pair(users.find { it.id == post.userId }!!.name,
+                  comments.filter { it.postId == post.id }.size)
+              }
+            )
+          }
         }
-      )
         .observeOn(viewScheduler)
         .subscribeBy(
-          onSuccess = { (name, numberOfComments) ->
+          onNext = { (name, numberOfComments) ->
             view.setName(name)
             view.setNumberOfComments(numberOfComments)
-            view.setDescription(postItem.body)
+            view.setDescription(post.body)
           },
           onError = { error ->
             Log.e(error.message, "ERROR")

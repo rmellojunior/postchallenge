@@ -1,11 +1,12 @@
 package com.example.postchallenge.ui.base
 
 import android.os.Bundle
+import io.reactivex.Observable
 
 interface BaseContract {
 
   interface Presenter {
-    fun start(state: Bundle?)
+    fun start()
     fun resume()
     fun pause()
     fun stop()
@@ -14,6 +15,8 @@ interface BaseContract {
     fun setInitialState(state: Bundle?)
   }
 
-  interface View
+  interface View {
+    fun isInternetOn(): Observable<Boolean>
+  }
 
 }

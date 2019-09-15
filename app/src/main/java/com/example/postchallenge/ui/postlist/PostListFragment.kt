@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postchallenge.PostApplication
 import com.example.postchallenge.R
-import com.example.postchallenge.service.PostItem
+import com.example.postchallenge.data.IPostRepository
+import com.example.postchallenge.data.PostRepository
+import com.example.postchallenge.data.model.Post
 import com.example.postchallenge.service.PostService
 import com.example.postchallenge.ui.base.BaseActivity
 import com.example.postchallenge.ui.base.BaseViewFragment
@@ -30,10 +32,14 @@ class PostListFragment : BaseViewFragment<PostListPresenter>(), PostListContract
       parentActivity = parentActivity as BaseActivity
     )
 
+    val repository = PostRepository()
+    app.netComponent.inject(repository)
+
     val presenter = PostListPresenter(
       view = this,
       navigator = navigator,
-      postService = postService
+      postService = postService,
+      repository = repository
     )
     app.netComponent.inject(presenter)
     return presenter
@@ -55,7 +61,7 @@ class PostListFragment : BaseViewFragment<PostListPresenter>(), PostListContract
     post_recycler_view.adapter = adapter
   }
 
-  override fun setPostList(postList: List<PostItem>) {
+  override fun setPostList(postList: List<Post>) {
     adapter.updatePostList(postList)
   }
 
@@ -63,7 +69,7 @@ class PostListFragment : BaseViewFragment<PostListPresenter>(), PostListContract
 //    post_recycler_view.setEmptyView(R.layout.empty_recycler_view)
   }
 
-  override fun postItemSelected(): Observable<PostItem> = adapter.postItemSelected()
+  override fun postItemSelected(): Observable<Post> = adapter.postItemSelected()
 
   companion object {
     fun newInstance(): PostListFragment = PostListFragment()

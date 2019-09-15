@@ -1,6 +1,9 @@
 package com.example.postchallenge.ui.base
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
+import io.reactivex.Observable
 
 abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), BaseContract.View {
 
@@ -11,21 +14,6 @@ abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), Ba
     getPresenter().setInitialState(savedInstanceState ?: arguments)
   }
 
-  override fun onViewStateRestored(savedInstanceState: Bundle?) {
-    super.onViewStateRestored(savedInstanceState)
-    getPresenter().start(savedInstanceState)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    getPresenter().resume()
-  }
-
-  override fun onPause() {
-    super.onPause()
-    getPresenter().pause()
-  }
-
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     val state: Bundle? = getPresenter().getCurrentState()
@@ -34,9 +22,36 @@ abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), Ba
     }
   }
 
-  override fun onDestroyView() {
+  override fun onViewStateRestored(savedInstanceState: Bundle?) {
+    super.onViewStateRestored(savedInstanceState)
+    getPresenter().setInitialState(savedInstanceState)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    getPresenter().start()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    getPresenter().resume()
+  }
+
+  override fun onPause() {
+    getPresenter().pause()
+    super.onPause()
+  }
+
+  override fun onStop() {
     getPresenter().stop()
-    super.onDestroyView()
+    super.onStop()
+  }
+
+  override fun isInternetOn(): Observable<Boolean> {
+    val connectivityManager = context!!.getSystemService(
+      Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetworkInfo = connectivityManager.activeNetworkInfo
+    return Observable.just(activeNetworkInfo != null && activeNetworkInfo.isConnected)
   }
 
 }

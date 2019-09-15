@@ -1,5 +1,8 @@
 package com.example.postchallenge.service
 
+import com.example.postchallenge.data.model.Comment
+import com.example.postchallenge.data.model.Post
+import com.example.postchallenge.data.model.User
 import com.example.postchallenge.di.SchedulerModule
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -21,7 +24,7 @@ class PostService {
     private const val ENDPOINT_COMMENTS_LIST = "comments"
   }
 
-  fun getPostList(): Single<List<PostItem>> {
+  fun getPostList(): Single<List<Post>> {
 
     return postApi.getPostList(
       url = ENDPOINT_POST_LIST

@@ -15,7 +15,7 @@ abstract class BasePresenter : BaseContract.Presenter {
 
   override fun getCurrentState(): Bundle = Bundle()
 
-  override fun start(state: Bundle?) {
+  override fun start() {
     onStartSubscriptions = CompositeDisposable()
   }
 

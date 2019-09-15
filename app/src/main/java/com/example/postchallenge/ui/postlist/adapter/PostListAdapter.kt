@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.example.postchallenge.service.PostItem
+import com.example.postchallenge.data.model.Post
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,10 +14,10 @@ class PostListAdapter(
   private val viewDetachEvent: Observable<Any>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-  private val postItemSelectedPublisher: PublishSubject<PostItem> = PublishSubject.create()
+  private val postSelectedPublisher: PublishSubject<Post> = PublishSubject.create()
   private val viewScheduler: Scheduler = AndroidSchedulers.mainThread()
 
-  private var postList = mutableListOf<PostItem>()
+  private var postList = mutableListOf<Post>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
     when (viewType) {
@@ -35,7 +35,7 @@ class PostListAdapter(
       .inflate(PostListItemViewHolder.LAYOUT, parent, false)
     return PostListItemViewHolder(
       itemView = view,
-      postItemSelectedPublisher = postItemSelectedPublisher,
+      postSelectedPublisher = postSelectedPublisher,
       viewDetachEvent = viewDetachEvent,
       viewScheduler = viewScheduler
     )
@@ -57,19 +57,19 @@ class PostListAdapter(
     }
   }
 
-  private fun getCodeForPosition(position: Int): PostItem =  postList[position]
+  private fun getCodeForPosition(position: Int): Post =  postList[position]
 
   override fun getItemViewType(position: Int): Int = LIST_TYPE_ITEM
 
   override fun getItemCount(): Int = postList.size
 
-  fun updatePostList(postList: List<PostItem>) {
+  fun updatePostList(postList: List<Post>) {
     this.postList.clear()
     this.postList.addAll(postList)
     notifyDataSetChanged()
   }
 
-  fun postItemSelected(): Observable<PostItem> = postItemSelectedPublisher
+  fun postItemSelected(): Observable<Post> = postSelectedPublisher
 
   companion object {
     private const val LIST_TYPE_ITEM = 0
