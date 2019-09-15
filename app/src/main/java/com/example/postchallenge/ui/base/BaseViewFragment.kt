@@ -7,43 +7,46 @@ import io.reactivex.Observable
 
 abstract class BaseViewFragment<T : BaseContract.Presenter> : BaseFragment(), BaseContract.View {
 
-  abstract fun getPresenter(): T
+  private lateinit var presenter: T
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    getPresenter().setInitialState(savedInstanceState ?: arguments)
-  }
+  protected abstract fun getPresenter(): T
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    val state: Bundle? = getPresenter().getCurrentState()
-    if (state != null) {
-      outState.putAll(state)
-    }
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+    presenter = getPresenter()
+    presenter.setInitialState(savedInstanceState ?: arguments)
   }
 
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
     super.onViewStateRestored(savedInstanceState)
-    getPresenter().setInitialState(savedInstanceState)
+    presenter.setInitialState(savedInstanceState)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    presenter.let {
+      val state = it.getCurrentState()
+      outState.putAll(state)
+    }
   }
 
   override fun onStart() {
     super.onStart()
-    getPresenter().start()
+    presenter.start()
   }
 
   override fun onResume() {
     super.onResume()
-    getPresenter().resume()
+    presenter.resume()
   }
 
   override fun onPause() {
-    getPresenter().pause()
+    presenter.pause()
     super.onPause()
   }
 
   override fun onStop() {
-    getPresenter().stop()
+    presenter.stop()
     super.onStop()
   }
 
